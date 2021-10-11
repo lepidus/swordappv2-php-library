@@ -163,6 +163,10 @@ class SWORDAPPClient {
         array_push($headers, "Content-Length: 0");
         array_push($headers, "In-Progress: false");
 
+        curl_setopt($sac_curl, CURLOPT_POSTFIELDS, array(
+            'file' => '@' .realpath('-')
+        ));
+
         curl_setopt($sac_curl, CURLOPT_HTTPHEADER, $headers);
 
         $sac_resp = curl_exec($sac_curl);
@@ -508,6 +512,11 @@ class SWORDAPPClient {
         // If required, set authentication
         if(!empty($sac_user) && !empty($sac_password)) {
             curl_setopt($sac_curl, CURLOPT_USERPWD, $sac_user . ":" . $sac_password);
+        }
+
+        // Set authentication only by token
+        if(!empty($sac_user) && empty($sac_password)) {
+            curl_setopt($sac_curl, CURLOPT_USERPWD, $sac_user . ":" . "");
         }
         
         // Set user-specified curl opts
